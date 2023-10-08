@@ -28,8 +28,8 @@ public:
     }
 
     void displayDetails() const override {
-        std::cout << "Manager Name: " << name << ", ID: " << employeeID << ", Salary: " << salary << ", Subordinates: "
-                  << numberOfSubordinates << "\n";
+        std::cout << "Manager Name: " << name << ", ID: " << employeeID << ", Salary: " << salary
+                  << ", Subordinates: " << numberOfSubordinates << "\n";
     }
 };
 
@@ -113,7 +113,7 @@ public:
         : Employee(name, employeeID, salary), department(department) {}
 
     double calculatePay() const override {
-        return salary + 0.05 * salary; // Team leader bonus
+        return salary + 0.05 * salary;
     }
 
     void displayDetails() const override {
@@ -122,53 +122,59 @@ public:
     }
 };
 
-class EmployeeManagementSystem {
+class Project {
 private:
-    std::vector<Department> departments;
-    std::vector<Employee*> employees;
+    std::string name;
+    std::vector<Employee*> teamMembers;
 
 public:
-    void addDepartment(const Department& department) {
-        departments.push_back(department);
+    Project(std::string name) : name(name) {}
+
+    void addTeamMember(Employee* employee) {
+        teamMembers.push_back(employee);
     }
 
-    void addEmployee(Employee* employee) {
-        employees.push_back(employee);
-    }
-
-    void displayEmployeeDetails() const {
-        std::cout << "Employee Details:\n";
-        for (const Employee* employee : employees) {
+    void displayTeam() const {
+        std::cout << "Team Members in Project " << name << ":\n";
+        for (const Employee* employee : teamMembers) {
             employee->displayDetails();
-            std::cout << "Calculated Pay: " << employee->calculatePay() << "\n";
         }
     }
 };
 
 int main() {
-    EmployeeManagementSystem ems;
-
-    Department hr("HR Department");
-    Department engineering("Engineering Department");
-
     Manager manager("John", 1, 50000, 5);
     Engineer engineer("Alice", 2, 60000, "Software");
     HourlyEmployee hourlyEmployee("Bob", 3, 20000, 160, 10);
     SalaryEmployee salaryEmployee("Eve", 4, 70000);
 
+    Department hr("HR Department");
+    Department engineering("Engineering Department");
     hr.addEmployee(&manager);
     engineering.addEmployee(&engineer);
     engineering.addEmployee(&hourlyEmployee);
     engineering.addEmployee(&salaryEmployee);
 
-    ems.addDepartment(hr);
-    ems.addDepartment(engineering);
-
     TeamLeader teamLeader("Mike", 5, 60000, &engineering);
 
-    ems.addEmployee(&teamLeader);
+    Project project("Project A");
+    project.addTeamMember(&manager);
+    project.addTeamMember(&engineer);
+    project.addTeamMember(&hourlyEmployee);
 
-    ems.displayEmployeeDetails();
+    std::cout << "Employee Details:\n";
+    manager.displayDetails();
+    engineer.displayDetails();
+    hourlyEmployee.displayDetails();
+    salaryEmployee.displayDetails();
+    teamLeader.displayDetails();
+
+    std::cout << "Department Details:\n";
+    hr.displayEmployees();
+    engineering.displayEmployees();
+
+    std::cout << "Project Details:\n";
+    project.displayTeam();
 
     return 0;
 }
